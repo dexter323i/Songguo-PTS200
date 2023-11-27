@@ -89,8 +89,9 @@ volatile int count, countMin, countMax, countStep;
 volatile bool handleMoved;
 
 // Variables for temperature control 温度控制变量
-uint16_t SetTemp, ShowTemp, gap, Step;
+uint16_t SetTemp, ShowTemp, gap, Step, avgMilivolts;
 double Input, Output, Setpoint, RawTemp, CurrentTemp, ChipTemp;
+
 
 // Variables for voltage readings 电压读数变量
 uint16_t Vcc, Vin;
@@ -718,8 +719,10 @@ void MainScreen() {
         SENSORTmpTime = 0;
       }
       u8g2.setCursor(0, 50);
-      u8g2.print(lastSENSORTmp, 1);
-      u8g2.print(F("C"));
+      //u8g2.print(lastSENSORTmp, 1);
+      //u8g2.print(F("C"));
+      u8g2.print(avgMilivolts);
+      u8g2.print(F("mV"));
       u8g2.setCursor(83, 50);
       u8g2.print(fVin, 1);
       u8g2.print(F("V"));
@@ -1257,9 +1260,13 @@ void AddTipScreen() {
 //  VP+_Ru = 100k, Rd_GND = 1K
 uint16_t denoiseAnalog(byte port) {
   uint32_t result = 0;
+  uint32_t mvResult = 0;
   float maxValue, minValue;
   int resultArray[8];
 
+  ////////////////////////
+  // Normal calculation
+  ////////////////////////
   for (uint8_t i = 0; i < 8; i++) {
     // get 32 readings and sort them 获取32个读数并对其进行排序
     float value, raw_adc;
@@ -1287,10 +1294,28 @@ uint16_t denoiseAnalog(byte port) {
     result += resultArray[i];
   }
 
-  //  Serial.printf("raw_val: %d", adc_sensor.readMiliVolts());
-  //  Serial.println();
-  // Serial.printf("val: %d", result / 4);
-  // Serial.println();
+  ///////////////////////////////
+  // Calculate milivolts result!
+  ///////////////////////////////
+  for (uint8_t i = 0; i < 8; i++) {
+    float raw_adc;
+    raw_adc = adc_sensor.readMiliVolts();
+    resultArray[i] = raw_adc;
+  }
+  for (uint8_t i = 0; i < 8; i++) {
+    for (uint8_t j = i + 1; j < 8; j++) {
+      if (resultArray[i] > resultArray[j]) {
+        int temp = resultArray[i];
+        resultArray[i] = resultArray[j];
+        resultArray[j] = temp;
+      }
+    }
+  }
+  for (uint8_t i = 2; i < 6; i++) {
+    mvResult += resultArray[i];
+  }
+  avgMilivolts = mvResult / 4;
+
   return (result / 4);  // devide by 32 and return value 除以32并返回值
 }
 
