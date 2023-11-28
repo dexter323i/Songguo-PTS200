@@ -549,10 +549,7 @@ void SENSORCheck() {
   if ((ShowTemp != Setpoint) || (abs(ShowTemp - CurrentTemp) > 5))
     ShowTemp = CurrentTemp;
   if (abs(ShowTemp - Setpoint) <= 1) ShowTemp = Setpoint;
-  if (inLockMode) {
-    ShowTemp = 0;
-  }
-
+  
   // set state variable if temperature is in working range; beep if working
   // temperature was just reached
   // 温度在工作范围内可设置状态变量;当工作温度刚刚达到时，会发出蜂鸣声
@@ -724,22 +721,16 @@ void MainScreen() {
       u8g2.print(fVin, 1);
       u8g2.print(F("V"));
       // draw current temperature 绘制当前温度
-      u8g2.setFont(u8g2_font_freedoomr25_tn);
+      u8g2.setFont(u8g2_font_spleen16x32_mn);
       u8g2.setFontPosTop();
       u8g2.setCursor(37, 18);
-      if (ShowTemp > 500)
-        u8g2.print(F("000"));
-      else
-        u8g2.printf("%03d", ShowTemp);
+      u8g2.printf("%d", ShowTemp);
     } else {
       // draw current temperature in big figures 用大数字绘制当前温度
-      u8g2.setFont(u8g2_font_fub42_tn);
+      u8g2.setFont(u8g2_font_7Segments_26x42_mn);
       u8g2.setFontPosTop();
       u8g2.setCursor(15, 20);
-      if (ShowTemp > 500)
-        u8g2.print(F("000"));
-      else
-        u8g2.printf("%03d", ShowTemp);
+      u8g2.printf("%d", ShowTemp);
     }
   } while (u8g2.nextPage());
 }
