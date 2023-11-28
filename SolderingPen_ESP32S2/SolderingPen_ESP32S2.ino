@@ -682,61 +682,63 @@ void MainScreen() {
     
     //    u8g2.drawUTF8(0, 0 + SCREEN_OFFSET, "设温:");
     u8g2.setFontPosTop();
-    if(language == 2){
-      u8g2.setFont(u8g2_font_unifont_t_symbols);
-      u8g2.drawUTF8(0, 2 + SCREEN_OFFSET, txt_set_temp[language]);
-      u8g2.setCursor(8, 0 + SCREEN_OFFSET);
-      u8g2.setFont(PTS200_16);
-    }
-    else{
-      u8g2.setFont(PTS200_16);
-      u8g2.drawUTF8(0, 0 + SCREEN_OFFSET, txt_set_temp[language]);
-      u8g2.setCursor(40, 0 + SCREEN_OFFSET);
-    }
-    u8g2.print(Setpoint, 0);
 
-    // draw status of heater 绘制加热器状态
-    u8g2.setCursor(96, 0 + SCREEN_OFFSET);
-    if (ShowTemp > 500){
-      if(language == 2)
-        u8g2.setCursor(78, 0 + SCREEN_OFFSET);
-      u8g2.print(txt_error[language]);
-    }
-    else if(inOffMode || inLockMode){
-      if(language == 2)
-        u8g2.setCursor(96, 0 + SCREEN_OFFSET);
-      u8g2.print(txt_off[language]);
-    }
-    else if (inSleepMode){
-      if(language == 2)
-        u8g2.setCursor(78, 0 + SCREEN_OFFSET);
-      u8g2.print(txt_sleep[language]);
-    }
-    else if (inBoostMode){
-      if(language == 2)
-        u8g2.setCursor(74, 0 + SCREEN_OFFSET);
-      u8g2.print(txt_boost[language]);
-    }
-    else if (isWorky){
-      if(language == 2)
-        u8g2.setCursor(81, 0 + SCREEN_OFFSET);
-      u8g2.print(txt_worky[language]);
-    }
-    else if (Output < 180){
-      if(language == 2)
-        u8g2.setCursor(86, 0 + SCREEN_OFFSET);
-      u8g2.print(txt_on[language]);
-    }
-    else{
-      if(language == 2)
-        u8g2.setCursor(86, 0 + SCREEN_OFFSET);
-      u8g2.print(txt_hold[language]);
-    }
-
+    // draw current tip and input voltage 绘制当前烙铁头及输入电压
+    float fVin = (float)Vin / 1000;  // convert mv in V
+    
     // rest depending on main screen type 休息取决于主屏幕类型
     if (MainScrType) {
-      // draw current tip and input voltage 绘制当前烙铁头及输入电压
-      float fVin = (float)Vin / 1000;  // convert mv in V
+      if(language == 2){
+        u8g2.setFont(u8g2_font_unifont_t_symbols);
+        u8g2.drawUTF8(0, 2 + SCREEN_OFFSET, txt_set_temp[language]);
+        u8g2.setCursor(8, 0 + SCREEN_OFFSET);
+        u8g2.setFont(PTS200_16);
+      }
+      else{
+        u8g2.setFont(PTS200_16);
+        u8g2.drawUTF8(0, 0 + SCREEN_OFFSET, txt_set_temp[language]);
+        u8g2.setCursor(40, 0 + SCREEN_OFFSET);
+      }
+      u8g2.print(Setpoint, 0);
+
+      // draw status of heater 绘制加热器状态
+      u8g2.setCursor(96, 0 + SCREEN_OFFSET);
+      if (ShowTemp > 500){
+        if(language == 2)
+          u8g2.setCursor(78, 0 + SCREEN_OFFSET);
+        u8g2.print(txt_error[language]);
+      }
+      else if(inOffMode || inLockMode){
+        if(language == 2)
+          u8g2.setCursor(96, 0 + SCREEN_OFFSET);
+        u8g2.print(txt_off[language]);
+      }
+      else if (inSleepMode){
+        if(language == 2)
+          u8g2.setCursor(78, 0 + SCREEN_OFFSET);
+        u8g2.print(txt_sleep[language]);
+      }
+      else if (inBoostMode){
+        if(language == 2)
+          u8g2.setCursor(74, 0 + SCREEN_OFFSET);
+        u8g2.print(txt_boost[language]);
+      }
+      else if (isWorky){
+        if(language == 2)
+          u8g2.setCursor(81, 0 + SCREEN_OFFSET);
+        u8g2.print(txt_worky[language]);
+      }
+      else if (Output < 180){
+        if(language == 2)
+          u8g2.setCursor(86, 0 + SCREEN_OFFSET);
+        u8g2.print(txt_on[language]);
+      }
+      else{
+        if(language == 2)
+          u8g2.setCursor(86, 0 + SCREEN_OFFSET);
+        u8g2.print(txt_hold[language]);
+      }
+
       newSENSORTmp = newSENSORTmp + 0.01 * getMPUTemp();
       SENSORTmpTime++;
       if (SENSORTmpTime >= 100) {
@@ -759,11 +761,34 @@ void MainScreen() {
       u8g2.setCursor(37, 18);
       u8g2.printf("%d", ShowTemp);
     } else {
+      if(language == 2){
+        u8g2.setFont(PTS200_16);
+        u8g2.setCursor(0, 0 + SCREEN_OFFSET);
+      }
+      else{
+        u8g2.setFont(PTS200_16);
+        u8g2.drawUTF8(0, 0 + SCREEN_OFFSET, txt_set_temp[language]);
+        u8g2.setCursor(40, 0 + SCREEN_OFFSET);
+      }
+      u8g2.print(Setpoint, 0);
+
+      if(fVin >= 10.0)
+        u8g2.setCursor(79, 0 + SCREEN_OFFSET);
+      else
+        u8g2.setCursor(88, 0 + SCREEN_OFFSET);
+      u8g2.print(fVin, 1);
+      u8g2.print(F("V"));
+
       // draw current temperature in big figures 用大数字绘制当前温度
       u8g2.setFont(u8g2_font_7Segments_26x42_mn);
       u8g2.setFontPosTop();
-      u8g2.setCursor(15, 20);
+      if(ShowTemp < 100)
+        u8g2.setCursor(68, 20);
+      else
+        u8g2.setCursor(38, 20);
       u8g2.printf("%d", ShowTemp);
+
+      //u8g2.drawBox(0, 26, 32, 32);
     }
   } while (u8g2.nextPage());
 }
