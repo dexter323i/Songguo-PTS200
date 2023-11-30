@@ -1,4 +1,4 @@
-//
+#include <Arduino.h>
 #include "config.h"
 
 //
@@ -10,6 +10,7 @@
 #include "Languages.h"
 #include "USB.h"
 #include "UtilsEEPROM.h"
+#include "images.h"
 
 QC3Control QC(14, 13);
 // QC.set12V();
@@ -779,6 +780,29 @@ void MainScreen() {
       u8g2.print(fVin, 1);
       u8g2.print(F("V"));
 
+      // draw status of heater 绘制加热器状态
+      if (ShowTemp > 500){
+        u8g2.drawXBM(0, 26, status_icon_width, status_icon_height, status_icon_error);
+      }
+      else if(inOffMode || inLockMode){
+        u8g2.drawXBM(0, 26, status_icon_width, status_icon_height, status_icon_off);
+      }
+      else if (inSleepMode){
+        u8g2.drawXBM(0, 26, status_icon_width, status_icon_height, status_icon_sleep);
+      }
+      else if (inBoostMode){
+        u8g2.drawXBM(0, 26, status_icon_width, status_icon_height, status_icon_boost);
+      }
+      else if (isWorky){
+        u8g2.drawXBM(0, 26, status_icon_width, status_icon_height, status_icon_work);
+      }
+      else if (Output < 180){
+        u8g2.drawXBM(0, 26, status_icon_width, status_icon_height, status_icon_heat);
+      }
+      else{
+        u8g2.drawXBM(0, 26, status_icon_width, status_icon_height, status_icon_hold);
+      }
+
       // draw current temperature in big figures 用大数字绘制当前温度
       u8g2.setFont(u8g2_font_7Segments_26x42_mn);
       u8g2.setFontPosTop();
@@ -787,8 +811,6 @@ void MainScreen() {
       else
         u8g2.setCursor(38, 20);
       u8g2.printf("%d", ShowTemp);
-
-      //u8g2.drawBox(0, 26, 32, 32);
     }
   } while (u8g2.nextPage());
 }
