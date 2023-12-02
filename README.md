@@ -8,6 +8,7 @@ I fixed some bugs in it, and also modified this and that, I didn't like.
 - I modified the large fonts on the two main screens, as I didn't like the original ones
 - Totally modified the "Big number" screen: Set temp in the top-left, input voltage in the top-right, status is shown by different icons
 - Adjusted temp calculation. Now it is much closer to the measured real temp, with TS-100 tips
+- Adjusting temp on the main screen is temporary. It won't save as Default temp
 
 
 ## Introduction
