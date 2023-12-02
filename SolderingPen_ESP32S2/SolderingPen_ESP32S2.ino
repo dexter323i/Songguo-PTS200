@@ -585,7 +585,7 @@ void SENSORCheck() {
 // values 根据ADC读数和校准值，计算出真实的温度值
 void calculateTemp() {
   if (RawTemp < 200)
-    CurrentTemp = map(RawTemp, 0, 200, 15, CalTemp[CurrentTip][0]);
+    CurrentTemp = map(RawTemp, 0, 200, 0, CalTemp[CurrentTip][0]);
   else if (RawTemp < 280)
     CurrentTemp =
         map(RawTemp, 200, 280, CalTemp[CurrentTip][0], CalTemp[CurrentTip][1]);
@@ -606,11 +606,6 @@ void Thermostat() {
     Setpoint = constrain(SetTemp + BoostTemp, 0, 450);
   } else
     Setpoint = SetTemp;
-
-  if (SetTemp != DefaultTemp) {
-    DefaultTemp = SetTemp;  // 把设置里面的默认温度也修改了
-    update_default_temp_EEPROM();
-  }
 
   // control the heater (PID or direct) 控制加热器(PID或直接)
   gap = abs(Setpoint - CurrentTemp);
@@ -1335,7 +1330,12 @@ uint16_t denoiseAnalog(byte port) {
     float value, raw_adc;
 
     raw_adc = adc_sensor.readMiliVolts();
-    value = constrain(0.4432 * raw_adc + 29.665, 20, 1000);
+    //value = constrain(0.4432 * raw_adc + 29.665, 20, 1000);
+    if(raw_adc < 70)
+      value = constrain(raw_adc - 19, 20, 1000);
+    else
+      value = constrain(0.455 * raw_adc + 20, 20, 1000);
+
 
     resultArray[i] = value;
   }

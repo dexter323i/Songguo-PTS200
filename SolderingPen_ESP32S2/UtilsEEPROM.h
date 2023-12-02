@@ -205,20 +205,4 @@ bool read_EEPROM()
   return true;
 }
 
-bool update_default_temp_EEPROM()
-{
-  Serial.println("Updating default temp in EEPROM");
 
-  EEPROM.writeUShort(ADDR_DEFAULT_TEMP, DefaultTemp);
-
-  if (EEPROM.commit())
-  {
-    Serial.println("Default temp Update Done");
-    return true;
-  }
-  else
-  {
-    Serial.println("Default temp Update Failed");
-    return false;
-  }
-}
