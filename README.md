@@ -1,4 +1,15 @@
 # Songguo PTS200 
+
+This branch is forked from the official firmware of the PTS-200 soldering iron.
+I fixed some bugs in it, and also modified this and that, I didn't like.
+- Bugfix: https://github.com/Eddddddddy/Songguo-PTS200/issues/19
+- Bugfix: https://github.com/Eddddddddy/Songguo-PTS200/issues/13
+- Always show measured temp, even at startup. Never show "000" as temp, which can be dangerous
+- I modified the large fonts on the two main screens, as I didn't like the original ones
+- Totally modified the "Big number" screen: Set temp in the top-left, input voltage in the top-right, status is shown by different icons
+- Adjusted temp calculation. Now it is much closer to the measured real temp, with TS-100 tips
+
+
 ## Introduction
 1. PD3.0 and QC3 fast charge protocol
 
