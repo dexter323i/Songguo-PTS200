@@ -276,7 +276,7 @@ void setup() {
   // #elif defined(LIS)
   //   u8g2.setBusClock(100000);
   Wire.begin();
-  Wire.setClock(400000);
+  Wire.setClock(100000);  // 400000
   if (accel.begin() == false) {
     delay(500);
     Serial.println("Accelerometer not detected.");
@@ -696,6 +696,7 @@ void MainScreen() {
         u8g2.setCursor(40, 0 + SCREEN_OFFSET);
       }
       u8g2.print(Setpoint, 0);
+      u8g2.print("C");
 
       // draw status of heater 绘制加热器状态
       u8g2.setCursor(96, 0 + SCREEN_OFFSET);
@@ -767,6 +768,7 @@ void MainScreen() {
         u8g2.setCursor(40, 0 + SCREEN_OFFSET);
       }
       u8g2.print(Setpoint, 0);
+      u8g2.print("C");
 
       if(fVin >= 10.0)
         u8g2.setCursor(79, 0 + SCREEN_OFFSET);
